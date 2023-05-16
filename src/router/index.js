@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import Dashboard from '../views/Dashboard.vue';
-import Schedule from '../views/Schedule.vue';
-import Customers from '../views/Customers.vue';
-import Barbers from '../views/Barbers.vue';
-import Reports from '../views/Reports.vue';
-import Users from '../views/Users.vue';
+import HomeView from '../views/HomeView.vue';
+import DashboardView from '../views/DashboardView.vue';
+import ScheduleView from '../views/ScheduleView.vue';
+import CustomersView from '../views/CustomersView.vue';
+import BarbersView from '../views/BarbersView.vue';
+import ReportsView from '../views/ReportsView.vue';
+import UsersView from '../views/UsersView.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,37 +13,37 @@ const router = createRouter({
 		{
 			path: '/',
 			name: 'home',
-			component: Home
+			component: HomeView
 		},
 		{
 			path: '/dashboard',
 			name: 'dashboard',
-			component: Dashboard
+			component: DashboardView
 		},
 		{
 			path: '/schedule',
 			name: 'schedule',
-			component: Schedule
+			component: ScheduleView
 		},
 		{
 			path: '/customers',
 			name: 'customers',
-			component: Customers
+			component: CustomersView
 		},
 		{
 			path: '/barbers',
 			name: 'barbers',
-			component: Barbers
+			component: BarbersView
 		},
 		{
 			path: '/reports',
 			name: 'reports',
-			component: Reports
+			component: ReportsView
 		},
 		{
 			path: '/users',
 			name: 'users',
-			component: Users
+			component: UsersView
 		}
 	]
 });
