@@ -1,5 +1,6 @@
 <script setup>
 	import { ref } from 'vue';
+
 	// Static state
 	const initialLoginFormState = {
 		email: '',
@@ -18,7 +19,6 @@
 	const whichForm = ref('login');
 	const loginDetails = ref({ ...initialLoginFormState });
 	const registerDetails = ref({ ...initialRegisterFormState });
-	const error = ref('');
 	const passError = ref('');
 
 	// Methods
@@ -33,7 +33,7 @@
 	const resetForms = () => {
 		loginDetails.value = { ...initialLoginFormState };
 		registerDetails.value = { ...initialRegisterFormState };
-		error.value = '';
+		passError.value = '';
 	};
 	const handleLogin = () => {};
 	const handleRegister = () => {};
@@ -100,14 +100,19 @@
 	<form v-else class="registerForm" @submit.prevent="handleRegister">
 		<h2>Register</h2>
 		<label>First Name:</label>
+		<span class="material-symbols-outlined"> person </span>
 		<input type="text" v-model="registerDetails.firstName" required />
 		<label>Last Name:</label>
+		<span class="material-symbols-outlined"> person </span>
 		<input type="text" v-model="registerDetails.lastName" required />
 		<label>Email:</label>
+		<span class="material-symbols-outlined"> mail </span>
 		<input type="email" v-model="registerDetails.email" required />
 		<label>Password:</label>
+		<span class="material-symbols-outlined"> lock </span>
 		<input type="password" v-model="registerDetails.password" required />
 		<label>Confirm Password:</label>
+		<span class="material-symbols-outlined"> lock </span>
 		<input type="password" v-model="registerDetails.confirmPassword" required />
 		<span v-if="passError" class="passError">{{ passError }}</span>
 		<label
