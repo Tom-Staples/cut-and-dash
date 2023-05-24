@@ -1,11 +1,11 @@
 <script setup>
-	import { ref } from 'vue';
 	import { RouterLink, RouterView } from 'vue-router';
 	import SideNav from './components/SideNav.vue';
 	import router from './router';
+	import tokenInteraction from './composables/tokenInteraction';
 
-	// Reactive state
-	const token = ref(false);
+	// Composables
+	const { token, setToken } = tokenInteraction();
 
 	//Redirect to login page if user is not authenticated
 	router.beforeEach(async to => {
@@ -24,7 +24,7 @@
 			<RouterLink to="dashboard"><h1>Cut-and-Dash</h1></RouterLink>
 			<SideNav />
 		</div>
-		<RouterView />
+		<RouterView @setToken="setToken" />
 	</main>
 </template>
 
