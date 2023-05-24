@@ -24,7 +24,13 @@ const postData = () => {
 			loading.value = false;
 		}
 	};
-	return { data, error, loading, submitData };
+
+	const resetData = () => {
+		data.value = null;
+		error.value = '';
+		loading.value = false;
+	};
+	return { data, error, loading, submitData, resetData };
 };
 
 export default postData;
