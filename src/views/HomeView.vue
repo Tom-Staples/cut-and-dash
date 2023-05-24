@@ -1,6 +1,13 @@
 <script setup>
+	import Spinner from '../components/LoadSpinner.vue';
+	import ErrorMessage from '../components/ErrorMessage.vue';
 	import { ref } from 'vue';
+	import postData from '../composables/postData';
+	import router from '../router';
+	import { defineEmits } from 'vue';
 
+	// Props
+	const emit = defineEmits(['setToken']);
 	// Static state
 	const initialLoginFormState = {
 		email: '',
@@ -22,21 +29,41 @@
 	const passError = ref('');
 
 	// Methods
-	const changeForm = () => {
-		let formName = 'login';
-		if (whichForm.value === 'login') {
-			formName = 'register';
-		}
+	const changeForm = changeTo => {
 		resetForms();
-		whichForm.value = formName;
+		regResetData();
+		whichForm.value = changeTo;
 	};
 	const resetForms = () => {
 		loginDetails.value = { ...initialLoginFormState };
 		registerDetails.value = { ...initialRegisterFormState };
 		passError.value = '';
 	};
-	const handleLogin = () => {};
-	const handleRegister = () => {};
+	const handleLogin = async () => {
+		await logSubmitData('http://localhost:3000/auth/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(loginDetails.value)
+		});
+		if (logData.value) {
+			emit('setToken', logData.value.access_token);
+			router.push('dashboard');
+		}
+	};
+	const handleRegister = () => {
+		const { terms, confirmPassword, ...rest } = registerDetails.value;
+		const data = { ...rest };
+
+		regSubmitData('http://localhost:3000/auth/register', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		});
+	};
 
 	// Computed
 	const validateLogin = () => {
@@ -67,23 +94,40 @@
 			return false;
 		}
 		return true;
-
-		//check password length and characters
-		// if (
-		// 	!password.match(
-		// 		/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
-		// 	)
-		// ) {
-		// 	passError.value =
-		// 		'Password must be a minimum of 8 characters long and contain at least one number, one letter and one special character';
-		// 	return false;
-		// }
 	};
+
+	// Composables
+	// Registration
+	const {
+		data: regData,
+		error: regError,
+		loading: regLoading,
+		submitData: regSubmitData,
+		resetData: regResetData
+	} = postData();
+
+	// Login
+	const {
+		data: logData,
+		error: logError,
+		loading: logLoading,
+		submitData: logSubmitData
+	} = postData();
 </script>
 
 <template>
+	<div v-if="regData" class="success">
+		<h2>Registration Successful</h2>
+		<p>
+			Your registration to Cut-and-Dash is complete! Please use the link below
+			to login and access the application
+		</p>
+		<a href="javascript: void(0)" @click="changeForm('login')"
+			>Return to login</a
+		>
+	</div>
 	<form
-		v-if="whichForm === 'login'"
+		v-else-if="whichForm === 'login'"
 		class="loginForm"
 		@submit.prevent="handleLogin"
 	>
@@ -95,7 +139,14 @@
 		<span class="material-symbols-outlined"> lock </span>
 		<input type="password" v-model="loginDetails.password" required />
 		<button :disabled="validateLogin()">Sign In</button>
-		<a href="javascript: void(0)" @click="changeForm">Not registered?</a>
+
+		<Spinner v-if="logLoading" />
+		<div v-if="logError" class="errorContainer">
+			<ErrorMessage :message="logError" />
+		</div>
+		<a href="javascript: void(0)" @click="changeForm('register')"
+			>Not registered?</a
+		>
 	</form>
 	<form v-else class="registerForm" @submit.prevent="handleRegister">
 		<h2>Register</h2>
@@ -126,13 +177,19 @@
 			required
 		/>
 		<button :disabled="!validateRegister()">Register</button>
-		<a href="javascript: void(0)" @click="changeForm">Back to login</a>
+		<Spinner v-if="regLoading" />
+		<div v-if="regError" class="errorContainer">
+			<ErrorMessage :message="regError" />
+		</div>
+
+		<a href="javascript: void(0)" @click="changeForm('login')">Back to login</a>
 	</form>
 </template>
 
 <style scoped>
 	.loginForm,
-	.registerForm {
+	.registerForm,
+	.success {
 		background: rgb(97, 199, 237);
 		color: #ffffff;
 		border: solid 1px;
@@ -144,9 +201,10 @@
 		flex-direction: column;
 		left: 50%;
 		margin-left: -250px;
-		margin-top: 50px;
+		margin-top: 20px;
 	}
-	h2 {
+	h2,
+	p {
 		text-align: center;
 		margin-bottom: 40px;
 	}
@@ -165,7 +223,7 @@
 	}
 	button {
 		width: 30%;
-		margin: 10px auto 30px;
+		margin: 10px auto 10px;
 		border-radius: 20px;
 		border: none;
 		background: #ffffff;
@@ -187,7 +245,8 @@
 	}
 	a {
 		color: #ffffff;
-		text-align: center;
+		margin: 0 auto;
+		width: fit-content;
 	}
 	#terms {
 		position: relative;
@@ -201,5 +260,11 @@
 		position: relative;
 		margin: 0 40px;
 		bottom: 20px;
+	}
+	.success h2 {
+		text-decoration: underline;
+	}
+	.errorContainer {
+		margin: 10px auto 10px;
 	}
 </style>
