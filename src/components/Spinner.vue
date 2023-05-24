@@ -10,7 +10,7 @@
 		height: 25px;
 		border-radius: 50%;
 		position: relative;
-		bottom: 60px;
+		bottom: 40px;
 		left: 294px;
 		animation: rotate 1s linear infinite;
 	}
