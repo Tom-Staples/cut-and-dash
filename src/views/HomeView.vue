@@ -4,7 +4,6 @@
 	import { ref } from 'vue';
 	import postData from '../composables/postData';
 	import router from '../router';
-	import { defineEmits } from 'vue';
 
 	// Props
 	const emit = defineEmits(['setToken']);
