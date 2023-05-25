@@ -19,7 +19,6 @@ const postData = () => {
 			}
 			loading.value = false;
 		} catch (err) {
-			console.log(err);
 			error.value = err;
 			loading.value = false;
 		}
