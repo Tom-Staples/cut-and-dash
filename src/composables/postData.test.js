@@ -33,13 +33,13 @@ describe('postData tests', () => {
 	test('submitData no params', async () => {
 		await submitData();
 		// No params results in an error. Data does not get updated but error does
+
 		expect(data.value).toBeFalsy();
 		expect(error.value).toBeTruthy();
 	});
 	describe('submitData with mock', () => {
-		global.fetch = vi.fn();
 		test('submitData data return', async () => {
-			fetch.mockResolvedValue(mockFetchData());
+			global.fetch = vi.fn().mockImplementation(mockFetchData);
 			await submitData();
 
 			expect(fetch).toHaveBeenCalledTimes(1);
@@ -47,7 +47,7 @@ describe('postData tests', () => {
 			expect(error.value).toBeFalsy();
 		});
 		test('submitData error return', async () => {
-			fetch.mockResolvedValue(mockFetchError());
+			global.fetch = vi.fn().mockImplementation(mockFetchError);
 			await submitData();
 
 			expect(fetch).toHaveBeenCalledTimes(1);
