@@ -12,8 +12,8 @@
 
 <template>
 	<nav id="sideNav">
-		<ul v-for="link in Object.keys(navIcons)" :key="link">
-			<RouterLink :to="link"
+		<ul>
+			<RouterLink :to="link" v-for="link in Object.keys(navIcons)" :key="link"
 				><li>
 					<span class="material-symbols-outlined"> {{ navIcons[link] }} </span>
 					<span>{{ link[0].toUpperCase() + link.substring(1) }}</span>
