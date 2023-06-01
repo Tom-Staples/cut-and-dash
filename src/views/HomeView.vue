@@ -52,6 +52,7 @@
 		}
 	};
 	const handleRegister = () => {
+		// eslint-disable-next-line no-unused-vars
 		const { terms, confirmPassword, ...rest } = registerDetails.value;
 		const data = { ...rest };
 
