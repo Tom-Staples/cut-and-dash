@@ -5,5 +5,7 @@ module.exports = {
 	parserOptions: {
 		ecmaVersion: 'latest'
 	},
-	globals: true
+	globals: {
+		global: true
+	}
 };
