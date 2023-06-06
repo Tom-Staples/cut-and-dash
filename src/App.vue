@@ -1,8 +1,10 @@
 <script setup>
-	import { RouterLink, RouterView } from 'vue-router';
+	import { RouterLink, RouterView, useRouter } from 'vue-router';
 	import SideNav from './components/SideNav.vue';
-	import router from './router';
 	import tokenInteraction from './composables/tokenInteraction';
+
+	// Static
+	const router = useRouter();
 
 	// Composables
 	const { token, setToken } = tokenInteraction();

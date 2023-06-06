@@ -3,11 +3,12 @@
 	import ErrorMessage from '../components/ErrorMessage.vue';
 	import { ref } from 'vue';
 	import postData from '../composables/postData';
-	import router from '../router';
+	import { useRouter } from 'vue-router';
 
 	// Props
 	const emit = defineEmits(['setToken']);
 	// Static state
+	const router = useRouter();
 	const initialLoginFormState = {
 		email: '',
 		password: ''
