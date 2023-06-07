@@ -4,6 +4,7 @@
 	import { ref } from 'vue';
 	import postData from '../composables/postData';
 	import { useRouter } from 'vue-router';
+	import { watchEffect } from 'vue';
 
 	// Props
 	const emit = defineEmits(['setToken']);
@@ -27,6 +28,8 @@
 	const loginDetails = ref({ ...initialLoginFormState });
 	const registerDetails = ref({ ...initialRegisterFormState });
 	const passError = ref('');
+	const validLog = ref(false);
+	const validReg = ref(false);
 
 	// Methods
 	const changeForm = changeTo => {
@@ -66,15 +69,13 @@
 		});
 	};
 
-	// Computed
-	const validateLogin = () => {
-		// Confirm that both fields have been filled
-		const { email, password } = loginDetails.value;
-		return !email || !password;
-	};
-	const validateRegister = () => {
-		// Reset error
+	// Effects
+	watchEffect(() => {
+		let valid = true;
+		// Reset passError & validReg
 		passError.value = '';
+		validReg.value = false;
+
 		// Check all fields have been filled
 		const { firstName, lastName, email, password, confirmPassword, terms } =
 			registerDetails.value;
@@ -86,16 +87,22 @@
 			!confirmPassword ||
 			!terms
 		) {
-			return false;
+			valid = false;
 		}
-
 		// Check passwords are the same
-		if (password !== confirmPassword) {
+		else if (password !== confirmPassword) {
 			passError.value = 'Passwords do not match';
-			return false;
+			valid = false;
+		} else {
+			valid = true;
 		}
-		return true;
-	};
+		validReg.value = valid;
+	});
+	watchEffect(() => {
+		// Confirm that both fields have been filled
+		const { email, password } = loginDetails.value;
+		validLog.value = !email || !password ? false : true;
+	});
 
 	// Composables
 	// Registration
@@ -139,7 +146,7 @@
 		<label>Password:</label>
 		<span class="material-symbols-outlined"> lock </span>
 		<input type="password" v-model="loginDetails.password" required />
-		<button :disabled="validateLogin()">Sign In</button>
+		<button :disabled="!validLog">Sign In</button>
 
 		<Spinner v-if="logLoading" />
 		<div v-if="logError" class="errorContainer">
@@ -177,7 +184,7 @@
 			v-model="registerDetails.terms"
 			required
 		/>
-		<button :disabled="!validateRegister()">Register</button>
+		<button :disabled="!validReg">Register</button>
 		<Spinner v-if="regLoading" />
 		<div v-if="regError" class="errorContainer">
 			<ErrorMessage :message="regError" />
