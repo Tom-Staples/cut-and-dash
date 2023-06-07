@@ -1,9 +1,16 @@
 import { shallowMount } from '@vue/test-utils';
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import App from './App.vue';
 
 describe('App tests', () => {
 	beforeEach(() => {
+		vi.mock('vue-router', () => ({
+			useRouter: () => ({
+				beforeEach: vi.fn()
+			}),
+			RouterView: vi.fn(),
+			RouterLink: vi.fn()
+		}));
 		localStorage.clear();
 	});
 
