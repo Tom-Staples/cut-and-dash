@@ -1,13 +1,13 @@
 <script setup>
-	import { RouterLink, RouterView } from 'vue-router';
+	import { RouterLink, RouterView, useRouter } from 'vue-router';
 	import SideNav from './components/SideNav.vue';
 	import tokenInteraction from './composables/tokenInteraction';
-	import router from './router';
 
 	// Composables
 	const { token, setToken } = tokenInteraction();
 
 	//Redirect to login page if user is not authenticated
+	const router = useRouter();
 	router.beforeEach(to => {
 		if (!token.value && to.name !== 'home') {
 			return { name: 'home' };
